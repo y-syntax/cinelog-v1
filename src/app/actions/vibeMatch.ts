@@ -38,7 +38,7 @@ export async function getVibeMatch() {
   Format your response as a valid JSON array of objects: 
   [{"title": "Movie Title", "reasoning": "A short 1-sentence reason why it matches my vibe"}]
   
-  Do not include these movie IDs (I'm not interested): ${exclusions.join(", ")}.
+  ${exclusions.length > 0 ? `Do not include these movie IDs (I'm not interested): ${exclusions.join(", ")}.` : ""}
   Only output the JSON array and nothing else.`;
 
   try {

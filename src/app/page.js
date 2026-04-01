@@ -21,18 +21,28 @@ export default async function HomePage({ searchParams }) {
   const recommendations = vibeMatches?.matches || [];
 
   return (
-    <div className="space-y-20 py-10 fade-in">
+    <div className="space-y-16 py-10 md:py-20 fade-in">
       {/* Hero Section */}
-      <div className="text-center max-w-4xl mx-auto space-y-8 z-10 px-4 relative">
+      <div className="text-center max-w-4xl mx-auto space-y-6 md:space-y-10 z-10 px-4 relative">
         <h1 className="text-5xl md:text-8xl font-black tracking-tight leading-none">
           Cine<span className="gradient-text">Log</span>
         </h1>
-        <p className="text-lg md:text-2xl text-slate-400 font-medium max-w-2xl mx-auto">
-          Your personal cinematic journal. Discover, review, and match your vibe.
+        <p className="text-lg md:text-2xl text-slate-400 font-medium max-w-2xl mx-auto px-4">
+          Documentation of your personal cinematic journey. Discover gems, log reviews, and curate your vibe.
         </p>
-        
-        {/* Search Bar */}
-        <form action="/" className="relative max-w-2xl mx-auto mt-12 group">
+      </div>
+
+      {/* Discovery Section (Visual Marquee) */}
+      <div className="space-y-4">
+        <div className="px-6 relative z-10">
+          <h2 className="text-2xl font-bold text-slate-300 tracking-wider uppercase text-xs">Random <span className="text-indigo-400 font-black">Discoveries</span></h2>
+        </div>
+        <AutoScroller movies={discoveryMovies} />
+      </div>
+
+      {/* Search Bar (Moved below Marquee) */}
+      <div className="max-w-2xl mx-auto px-4 md:px-0 relative z-20">
+        <form action="/" className="relative group">
           <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-600 rounded-2xl blur-md opacity-25 group-hover:opacity-60 transition duration-1000 group-hover:duration-300"></div>
           <div className="relative flex items-center bg-slate-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl transition-all group-hover:border-white/20">
             <div className="relative flex-1">
@@ -57,16 +67,6 @@ export default async function HomePage({ searchParams }) {
         </form>
       </div>
 
-      {/* Discovery Section (Visual Marquee) */}
-      {!query && (
-        <div className="space-y-4">
-          <div className="px-6 relative z-10">
-            <h2 className="text-2xl font-bold text-slate-300 tracking-wider uppercase text-sm">Random <span className="text-indigo-400">Discoveries</span></h2>
-          </div>
-          <AutoScroller movies={discoveryMovies} />
-        </div>
-      )}
-
       {/* Results & AI Recommendations */}
       {query && (
         <div className="max-w-7xl mx-auto px-6 space-y-24 pb-20">
@@ -74,7 +74,7 @@ export default async function HomePage({ searchParams }) {
           <section className="fade-in">
             <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6">
               <h2 className="text-3xl font-black text-white italic">Search Results</h2>
-              <p className="text-slate-500 font-medium tracking-widest uppercase text-xs">Matching "{query}"</p>
+              <p className="text-slate-500 font-medium tracking-widest uppercase text-[10px]">Matching "{query}"</p>
             </div>
             
             {searchResults.length === 0 ? (
@@ -94,8 +94,8 @@ export default async function HomePage({ searchParams }) {
           {recommendations.length > 0 && (
             <section className="fade-in">
               <div className="flex justify-between items-end mb-10 border-b border-indigo-500/20 pb-6">
-                <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 italic">Similar Vibes</h2>
-                <p className="text-indigo-400/60 font-medium tracking-widest uppercase text-xs">AI-Curated for You</p>
+                <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 italic font-serif">Similar Vibes</h2>
+                <p className="text-indigo-400/60 font-medium tracking-widest uppercase text-[10px]">AI-Curated for You</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-12">
                 {recommendations.map((movie) => (

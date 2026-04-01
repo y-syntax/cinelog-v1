@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.reviews (
   movie_id integer not null,
   movie_title text not null,
   poster_path text,
-  rating smallint check (rating >= 1 and rating <= 10) not null,
+  rating numeric(3,1) check (rating >= 1 and rating <= 10) not null,
   review_text text
 );
 

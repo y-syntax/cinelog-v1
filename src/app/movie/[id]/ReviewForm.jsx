@@ -61,11 +61,12 @@ export default function ReviewForm({ movieId, movieTitle, posterPath, existingRe
               type="range" 
               min="1" 
               max="10" 
+              step="0.1"
               value={rating}
               onChange={(e) => setRating(e.target.value)}
               className="w-full max-w-xs accent-indigo-500 h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer"
             />
-            <span className="text-3xl font-black text-white w-12 text-center">{rating}</span>
+            <span className="text-3xl font-black text-white w-16 text-center">{Number(rating).toFixed(1)}</span>
           </div>
         </div>
 

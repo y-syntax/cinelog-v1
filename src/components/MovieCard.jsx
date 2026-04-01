@@ -41,7 +41,7 @@ export default function MovieCard({ movie, showExclude = false }) {
           {movie.rating && (
             <div className="mt-2 flex items-center gap-2">
               <span className="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-500/30">
-                ★ {movie.rating}/10
+                ★ {Number(movie.rating).toFixed(1)}/10
               </span>
             </div>
           )}
