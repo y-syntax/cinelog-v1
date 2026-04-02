@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function getReviews() {
   const supabase = await createClient();
@@ -25,11 +26,11 @@ export async function getReviewByMovieId(movieId: number | string) {
   const { data, error } = await supabase
     .from("reviews")
     .select("*")
-    .eq("movie_id", movieId)
+    .eq("movie_id", Number(movieId))
     .eq("user_id", userData.user.id)
-    .single();
+    .maybeSingle();
 
-  if (error && error.code !== 'PGRST116') throw new Error(error.message); // PGRST116 is no rows
+  if (error) throw new Error(error.message);
   return data || null;
 }
 
@@ -42,12 +43,12 @@ export async function saveReview(reviewData: { id?: string, movie_id: number, mo
     const { error } = await supabase.from("reviews").update({
       rating: reviewData.rating,
       review_text: reviewData.review_text
-    }).eq("id", reviewData.id);
+    }).eq("id", reviewData.id).eq("user_id", userData.user.id);
     if (error) throw new Error(error.message);
   } else {
     const { error } = await supabase.from("reviews").insert({
       user_id: userData.user.id,
-      movie_id: reviewData.movie_id,
+      movie_id: Number(reviewData.movie_id),
       movie_title: reviewData.movie_title,
       poster_path: reviewData.poster_path,
       rating: reviewData.rating,
@@ -55,10 +56,13 @@ export async function saveReview(reviewData: { id?: string, movie_id: number, mo
     });
     if (error) throw new Error(error.message);
   }
+  
+  revalidatePath("/my-movies");
+  revalidatePath(`/movie/${reviewData.movie_id}`);
   return true;
 }
 
-export async function deleteReview(id: string) {
+export async function deleteReview(id: string, movieId?: number) {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData?.user) throw new Error("Unauthorized");
@@ -70,5 +74,8 @@ export async function deleteReview(id: string) {
     .eq("user_id", userData.user.id);
 
   if (error) throw new Error(error.message);
+  
+  revalidatePath("/my-movies");
+  if (movieId) revalidatePath(`/movie/${movieId}`);
   return true;
 }

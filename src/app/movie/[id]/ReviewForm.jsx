@@ -17,13 +17,12 @@ export default function ReviewForm({ movieId, movieTitle, posterPath, existingRe
     try {
       await saveReview({
         id: existingReview?.id,
-        movie_id: movieId,
+        movie_id: Number(movieId),
         movie_title: movieTitle,
         poster_path: posterPath,
         rating: Number(rating),
         review_text: reviewText
       });
-      alert('Review saved to your visual journal! 🎬');
       router.refresh();
       router.push('/my-movies');
     } catch (err) {
@@ -38,7 +37,7 @@ export default function ReviewForm({ movieId, movieTitle, posterPath, existingRe
     if (!confirm('Are you sure you want to delete this review?')) return;
     setLoading(true);
     try {
-      await deleteReview(existingReview.id);
+      await deleteReview(existingReview.id, Number(movieId));
       router.refresh();
       router.push('/my-movies');
     } catch (err) {
