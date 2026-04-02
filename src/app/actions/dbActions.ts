@@ -28,6 +28,7 @@ export async function getReviewByMovieId(movieId: number | string) {
     .select("*")
     .eq("movie_id", Number(movieId))
     .eq("user_id", userData.user.id)
+    .limit(1)
     .maybeSingle();
 
   if (error) throw new Error(error.message);

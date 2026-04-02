@@ -4,12 +4,16 @@ import MovieCard from '@/components/MovieCard';
 import AutoScroller from '@/components/AutoScroller';
 import { getExclusions } from '@/app/actions/userExclusions';
 import { getReviews } from '@/app/actions/dbActions';
+import { cleanupDuplicates } from '@/app/actions/diagnostics';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
   const query = params?.q || '';
+
+  // One-time cleanup for duplicate reviews (Safe to run multiple times, but needed once)
+  await cleanupDuplicates().catch(err => console.error("Cleanup error:", err));
   
   // Fetch discovery movies, exclusions, and reviews in parallel
   const [initialDiscovery, exclusions, reviews] = await Promise.all([
