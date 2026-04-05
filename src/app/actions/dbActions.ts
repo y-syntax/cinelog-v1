@@ -11,12 +11,17 @@ export async function getReviews() {
 
     const { data, error } = await supabase
       .from("reviews")
-      .select("*")
+      .select("*, profiles(full_name)")
       .eq("user_id", userData.user.id)
       .order("created_at", { ascending: false });
 
     if (error) throw new Error(error.message);
-    return data;
+    
+    // Map data to include the name more easily
+    return data.map(r => ({
+      ...r,
+      reviewer_name: r.profiles?.full_name || 'Anonymous'
+    }));
   } catch (err) {
     console.error("getReviews error:", err);
     return [];
@@ -50,6 +55,17 @@ export async function saveReview(reviewData: { id?: string, movie_id: number, mo
     const supabase = await createClient();
     const { data: userData } = await supabase.auth.getUser();
     if (!userData?.user) return { success: false, error: "Unauthorized. Please Login." };
+
+    // Check if user is approved
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_approved, is_admin')
+      .eq('id', userData.user.id)
+      .single();
+
+    if (!profile?.is_approved && !profile?.is_admin) {
+      return { success: false, error: "Your account is awaiting admin approval." };
+    }
 
     if (reviewData.id) {
       const { error } = await supabase.from("reviews").update({

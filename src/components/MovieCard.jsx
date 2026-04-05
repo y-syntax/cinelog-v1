@@ -39,10 +39,17 @@ export default function MovieCard({ movie, showExclude = false }) {
             <p className="text-[10px] md:text-xs font-medium text-slate-400 mt-1">{new Date(movie.release_date).getFullYear()}</p>
           )}
           {movie.rating && (
-            <div className="mt-2 flex items-center gap-2">
-              <span className="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-500/30">
-                ★ {Number(movie.rating).toFixed(1)}/10
-              </span>
+            <div className="mt-2 flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span className="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-500/30">
+                  ★ {Number(movie.rating).toFixed(1)}/10
+                </span>
+              </div>
+              {movie.reviewer_name && (
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                  Reviewed by {movie.reviewer_name}
+                </span>
+              )}
             </div>
           )}
           {movie.reasoning && (

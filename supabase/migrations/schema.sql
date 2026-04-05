@@ -50,3 +50,27 @@ CREATE POLICY "Users can create their own exclusions." ON public.movie_exclusion
 
 CREATE POLICY "Users can delete their own exclusions." ON public.movie_exclusions
   FOR DELETE USING (auth.uid() = user_id);
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id uuid REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  is_approved BOOLEAN DEFAULT FALSE,
+  is_admin BOOLEAN DEFAULT FALSE,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Turn on Row Level Security for profiles
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+
+-- Allow anyone to view profiles (to see reviewer names)
+CREATE POLICY "Public profiles are viewable by everyone." ON public.profiles
+  FOR SELECT USING (true);
+
+-- Allow users to insert their own profile
+CREATE POLICY "Users can insert their own profile." ON public.profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Allow users to update their own profile
+CREATE POLICY "Users can update their own profile." ON public.profiles
+  FOR UPDATE USING (auth.uid() = id);
