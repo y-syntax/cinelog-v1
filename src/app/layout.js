@@ -2,6 +2,7 @@ import './globals.css';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { logout } from '@/app/actions/authActions';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'CineLog - Your Beautiful Movie Journal',
@@ -80,6 +81,7 @@ export default async function RootLayout({ children }) {
         <main className="flex-1 mt-20 md:mt-28 mb-20 md:mb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
           {children}
         </main>
+        <Analytics />
       </body>
     </html>
   );
