@@ -2,7 +2,6 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { notifyAdminOfNewUser, notifyUserOfApproval } from "./emailActions";
 import { revalidatePath } from "next/cache";
 
 export async function login(formData: FormData) {
@@ -53,11 +52,6 @@ export async function signup(formData: FormData) {
       is_admin: isAdmin,
       updated_at: new Date().toISOString()
     });
-
-    if (!isAdmin) {
-      // Optional: still notify admin of new users if desired
-      await notifyAdminOfNewUser(full_name, email);
-    }
   }
 
   // Redirect to home. If email verification is on, Supabase will handle the lock/auth state.
@@ -91,30 +85,6 @@ export async function saveProfile(formData: FormData) {
   redirect("/");
 }
 
-export async function approveUser(userId: string) {
-  const supabase = await createClient();
-  
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('full_name, email, id')
-    .eq('id', userId)
-    .single();
-
-  if (profileError) return { error: profileError.message };
-
-  const { error } = await supabase
-    .from('profiles')
-    .update({ is_approved: true })
-    .eq('id', userId);
-
-  if (error) return { error: error.message };
-
-  // Notify user
-  await notifyUserOfApproval(profile.full_name, profile.email);
-
-  revalidatePath("/admin");
-  return { success: true };
-}
 
 export async function logout() {
   const supabase = await createClient();
