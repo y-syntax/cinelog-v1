@@ -38,7 +38,12 @@ export default async function RootLayout({ children }) {
             <div className="flex justify-between items-center h-20">
               <Link href="/" className="flex items-center gap-2 text-2xl md:text-3xl font-heading font-extrabold tracking-tighter text-white hover:opacity-80 transition-opacity">
                 {logoExists ? (
-                  <img src="/logo.png" alt="CineLog Logo" className="h-8 md:h-10 w-auto object-contain" />
+                  <img 
+                    src="/logo.png" 
+                    alt="CineLog Logo" 
+                    className="h-12 md:h-16 w-auto object-contain" 
+                    style={{ mixBlendMode: 'screen' }} 
+                  />
                 ) : (
                   <>Cine<span className="text-cinema-red">Log</span></>
                 )}
