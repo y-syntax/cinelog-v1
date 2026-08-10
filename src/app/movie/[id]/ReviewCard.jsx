@@ -1,11 +1,8 @@
 import LikeButton from "@/components/LikeButton";
+import { formatDate } from "@/utils/dateFormatter";
 
 export default function ReviewCard({ review, isCurrentUser = false }) {
-  const date = new Date(review.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const date = formatDate(review.created_at);
 
   return (
     <div className={`p-6 rounded-2xl border transition-all duration-300 ${

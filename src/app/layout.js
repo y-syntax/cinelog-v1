@@ -18,7 +18,10 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'CineLog - Your Beautiful Movie Journal',
+  title: {
+    default: 'CineLog - Your Beautiful Movie Journal',
+    template: '%s | CineLog',
+  },
   description: 'Track, review, and discover movies with AI',
 };
 

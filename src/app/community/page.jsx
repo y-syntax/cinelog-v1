@@ -2,6 +2,7 @@ import { getCommunityReviews } from "@/app/actions/dbActions";
 import Link from "next/link";
 import LikeButton from "@/components/LikeButton";
 import CommunityFilters from "@/components/CommunityFilters";
+import { formatDate } from "@/utils/dateFormatter";
 
 export const metadata = {
   title: "Community Reviews | CineLog",
@@ -82,7 +83,7 @@ export default async function CommunityPage({ searchParams }) {
                       {review.reviewer_name}
                     </span>
                     <span className="text-[10px] text-slate-500 ml-auto font-medium">
-                      {new Date(review.created_at).toLocaleDateString()}
+                      {formatDate(review.created_at)}
                     </span>
                   </div>
 

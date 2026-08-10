@@ -1,25 +1,31 @@
 import { getMovieDetails } from '@/app/actions/movieApi';
 import { getReviewByMovieId, getAllReviewsForMovie } from '@/app/actions/dbActions';
 import ReviewsSection from './ReviewsSection';
+import { createClient } from '@/utils/supabase/server';
 
 export async function generateMetadata({ params }) {
-  const { id } = await params;
   try {
+    const { id } = await params;
     const movie = await getMovieDetails(id);
+    console.log(`[SEO] generateMetadata executed for movie: ${movie.title} (ID: ${id})`);
     return {
-      title: `${movie.title} | CineLog`,
+      title: movie.title,
       description: movie.overview || `Review and track ${movie.title} on CineLog.`,
     };
   } catch (err) {
     console.error("generateMetadata error:", err);
     return {
-      title: "Movie | CineLog",
+      title: "Movie",
     };
   }
 }
 
 export default async function MoviePage({ params }) {
   const { id } = await params;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isLoggedIn = !!user;
+
   let movie, existingReview, allReviews = [];
   
   try {
@@ -109,6 +115,7 @@ export default async function MoviePage({ params }) {
               movieTitle={movie.title}
               posterPath={movie.poster_path}
               genreIds={movie.genres?.map(g => g.id)}
+              isLoggedIn={isLoggedIn}
             />
           ) : (
             <div className="bg-red-500/10 p-8 rounded-[2rem] border border-red-500/20 text-red-400 text-center">
